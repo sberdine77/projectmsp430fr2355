@@ -9,25 +9,29 @@
 int main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	setupTimmer();
+	setupTimer();
 	setupUart();
 	
 	while(1) {
 	    switch(state){
         case WAVE:
             generateWave();
+            nextState();
             break;
         case LOGGER:
             //
+            nextState();
             break;
         case SERIALREADER:
             readUart();
+            nextState();
             break;
         case LEDWAVE:
             blink();
+            nextState();
             break;
         default:
-            //
+            state = WAVE;
             break;
         }
 	}

@@ -118,7 +118,7 @@ void setupTimer() {
     TB0CCTL1 |= CM_0 | CAP_0 | OUTMOD_3 | OUT_1;
 
              //TB0CCR0 = 55000;
-             TB0CCR1 = 55000;
+             TB0CCR1 = 125;
 
 
 
@@ -127,7 +127,7 @@ void setupTimer() {
 }
 
 void blink() {
-    if(ledCompare >= mili) {
+    if(mili >= ledCompare) {
         ledCompare += 500;
         P1OUT ^= BIT3;
     }

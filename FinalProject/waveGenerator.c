@@ -18,7 +18,6 @@ const char* TRIANGULAR_TYPE = "tri";
 const char* SENOIDAL_TYPE = "sen";
 
 int waveType = 0;
-int wavePoints = 50;
 int drawCompare = 31;
 int passo = 31;
 
@@ -34,14 +33,11 @@ int compareType(const char *string, const char *type) {
 }
 
 void changeWaveType(char *newType) {
-    if(compareType(newType, RECTANGULAR_TYPE)) {
-        wavePoints = 50;
+    if(compareType(newType, RECTANGULAR_TYPE)) {\
         waveType = RECT;
     } else if(compareType(newType, TRIANGULAR_TYPE)) {
-        wavePoints = 50;
         waveType = TRI;
     } else if(compareType(newType, SENOIDAL_TYPE)) {
-        wavePoints = 50;
         waveType = SEN;
     }
 }
@@ -49,12 +45,11 @@ void changeWaveType(char *newType) {
 void draw() {
     if(waveType == RECT) {
     //Rectangular
-    } else if(waveType ==TRI) {
+    } else if(waveType == TRI) {
     //Triangular
     } else if(waveType == SEN) {
     //Senoid
     }
-    wavePoints--;
 }
 
 int canDraw() {
@@ -72,3 +67,5 @@ void generateWave() {
     }
     draw();
 }
+
+
