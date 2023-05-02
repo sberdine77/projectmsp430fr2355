@@ -97,6 +97,8 @@ volatile int  TXBufferEmpty0, TXBufferEmpty1, ptrWrCH0, ptrWrCH1, ptrRdCH0, ptrR
 char bufferRxCH0[COMMBUFFERLENGH], bufferRxCH1[COMMBUFFERLENGH];
 long long i;
 char linha[16];
+int readedChar = 0;
+int posicaoLinha = 0;
 
 char myGetChar (int canal){
     char dado;
@@ -225,34 +227,24 @@ void setupUart(void)
   TXBufferEmpty1 = TRUE;
 
   __bis_SR_register(GIE);         // Enter LPM3, interrupts enabled //LPM3_bits|
-//  while (1){
-//      myPuts("Hello Word 0\n\r", 0);
-//      myPuts("Hello Word 1\n\r", 1);
-//      for (i=0; i<100000; i++)
-//      __no_operation();                         // For debugger
-//      do {
-//          __no_operation();                         // For debugger
-//          myGetLine (linha, 16, 1);
-//
-//          char * comando = linha;
-//
-//          //myPuts(comando, 1);
-//
-//          runCommand(comando);
-//
-//          dado=strcmp (linha, "sair\n\r");
-//
-//      } while(dado);
-//
-//  }
+
 }
 
-void readUart() {
-    __no_operation();                         // For debugger
-    myGetLine (linha, 16, 1);
-    char * comando = linha;
 
-    runCommand(comando);
+void readUart(){
+    if(readedChar && ptrRdCH1 != ptrWrCH1) {
+        linha[posicaoLinha] = bufferRxCH1[ptrRdCH1];
+        ptrRdCH1++;
+        ptrRdCH1 &=COMMBUFFERLENGH-1;
+        if(linha[posicaoLinha] == '\r') {
+            linha[posicaoLinha] = '\0';
+            runCommand(linha);
+            posicaoLinha = 0;
+        } else {
+            posicaoLinha ++;
+        }
+        readedChar = 0;
+    }
 }
 
 
@@ -384,6 +376,7 @@ void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
     case USCI_UART_UCRXIFG:
         bufferRxCH0[ptrWrCH0] = UCA0RXBUF;
         ptrWrCH0++;
+        readedChar =  1;
         ptrWrCH0 &=COMMBUFFERLENGH-1;
         if (ptrWrCH0==ptrRdCH0){
             ptrRdCH0++;

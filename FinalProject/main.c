@@ -1,4 +1,3 @@
-#include <msp430.h>
 #include <stateManager.c>
 //#include <waveGenerator.c>
 #include <serialReader.c>
@@ -10,27 +9,27 @@
 int main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	setupTimmer();
 	setupUart();
 	
-	switch(state){
-	case WAVE:
-	    generateWave();
-	    break;
-	case LOGGER:
-        //
-        break;
-	case SERIALREADER:
-        readUart();
-        break;
-	case LEDWAVE:
-        //
-        break;
-	case LEDLOGGER:
-        //
-        break;
-	default:
-        //
-	    break;
+	while(1) {
+	    switch(state){
+        case WAVE:
+            generateWave();
+            break;
+        case LOGGER:
+            //
+            break;
+        case SERIALREADER:
+            readUart();
+            break;
+        case LEDWAVE:
+            blink();
+            break;
+        default:
+            //
+            break;
+        }
 	}
 
 	return 0;
